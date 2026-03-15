@@ -59,4 +59,4 @@ If you wish to run your own instance of the backend:
 2.  Install dependencies: `pip install -r requirements.txt`.
 3.  Set your environment variables in a `.env` file (e.g., `GROQ_API_KEY`, `OPENROUTER_API_KEY`).
 4.  Run the server: `python main.py`.
-5.  Update the `API_BASE_URL` in `extension/content.js` to point to your new local or cloud URL.
+5.  *(Optional)* Update the `API_BASE_URL` in `extension/content.js` to point to your new local or cloud URL *only if you deployed your own backend instance.*
