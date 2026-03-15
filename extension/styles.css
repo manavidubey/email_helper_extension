@@ -1,0 +1,96 @@
+/* AI Executive Mail Assistant Styles */
+
+.ai-exec-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: #444746; /* Native Gmail dark gray */
+    border: none;
+    border-radius: 4px;
+    padding: 0 12px;
+    height: 36px;
+    font-family: "Google Sans", Roboto, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-right: 8px;
+    transition: background-color 0.15s;
+    fill: #444746;
+}
+
+.ai-exec-btn:hover {
+    background-color: rgba(68, 71, 70, 0.08); /* Subtle gray hover like Gmail */
+}
+
+.ai-exec-btn:active {
+    background-color: rgba(68, 71, 70, 0.12);
+}
+
+.ai-exec-btn svg {
+    margin-right: 6px;
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+}
+
+.ai-exec-loading {
+    animation: pulse 1.5s infinite ease-in-out;
+    opacity: 0.8;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* Gmail specific overrides/containers */
+.ai-exec-container {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px;
+}
+
+/* Modal/Overlay for Summaries */
+.ai-exec-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    padding: 24px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    border: 1px solid #e2e8f0;
+}
+
+.ai-exec-modal-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ai-exec-modal-content {
+    color: #475569;
+    line-height: 1.6;
+    max-height: 400px;
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+.ai-exec-modal-close {
+    cursor: pointer;
+    color: #94a3b8;
+}
+
+.ai-exec-modal-close:hover {
+    color: #64748b;
+}

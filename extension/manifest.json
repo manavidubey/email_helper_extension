@@ -1,0 +1,42 @@
+{
+    "manifest_version": 3,
+    "name": "AI Executive Mail Assistant",
+    "version": "1.0",
+    "description": "AI-powered email productivity for executives using Gmail.",
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "storage"
+    ],
+    "host_permissions": [
+        "https://mail.google.com/*",
+        "http://localhost:8080/*",
+        "https://ai-exec-backend-1012403291370.us-central1.run.app/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://mail.google.com/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "css": [
+                "styles.css"
+            ]
+        }
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "48": "icons/icon48.png",
+            "128": "icons/icon128.png"
+        }
+    },
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    }
+}

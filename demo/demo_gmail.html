@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Executive Mail Assistant - Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f3f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .gmail-logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #d93025;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            border-radius: 0 0 8px 8px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: #202124;
+            font-size: 18px;
+            margin-top: 0;
+        }
+
+        .compose-box {
+            width: 100%;
+            height: 150px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            outline: none;
+            resize: none;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .send-btn {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Extension Specific Styles (copied from extension/styles.css) */
+        .ai-exec-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .ai-exec-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .ai-exec-loading {
+            opacity: 0.6;
+            cursor: not-allowed;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .thread-view {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #ddd;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .message:last-child {
+            border-bottom: none;
+        }
+
+        .sender {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .body {
+            font-size: 13px;
+            color: #444;
+        }
+
+        /* Modal Styles */
+        .ai-exec-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+
+        .ai-exec-modal.active {
+            display: block;
+        }
+
+        .ai-exec-modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .ai-exec-modal-content {
+            color: #475569;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+
+        .ai-exec-modal-close {
+            cursor: pointer;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="gmail-logo">MOCK GMAIL</div>
+        <div style="color: #666; font-size: 12px;">Demoing: AI Executive Mail Assistant</div>
+    </div>
+    <div class="container">
+
+        <!-- Section 1: Improve Draft -->
+        <div class="section">
+            <h2>✨ Feature 1: Improve Draft</h2>
+            <p style="font-size: 13px; color: #666;">Type a rough email below and click "Improve Draft".</p>
+            <textarea id="composeBox" class="compose-box"
+                placeholder="Write something rough here...">Hey team, i need the report by EOD. make it quick. thanks.</textarea>
+            <div class="toolbar">
+                <button class="send-btn">Send</button>
+                <button id="improveBtn" class="ai-exec-btn">✨ Improve Draft</button>
+            </div>
+        </div>
+
+        <!-- Section 2: Thread Actions -->
+        <div class="section">
+            <h2>✨ Feature 2: Summarize & Reply</h2>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button id="summarizeBtn" class="ai-exec-btn">✨ Summarize Thread</button>
+                <button id="replyBtn" class="ai-exec-btn">✨ Generate Reply</button>
+            </div>
+            <div class="thread-view" id="threadView">
+                <div class="message">
+                    <div class="sender">John Smith &lt;john@company.com&gt;</div>
+                    <div class="body">Hi, I'm waiting for the Q1 financial update. Can we meet tomorrow at 10 AM to
+                        discuss?</div>
+                </div>
+                <div class="message">
+                    <div class="sender">Sarah Chen &lt;sarah@company.com&gt;</div>
+                    <div class="body">I've attached the preliminary numbers. Note that the marketing spend was 15%
+                        higher than projected due to the new campaign.</div>
+                </div>
+                <div class="message">
+                    <div class="sender">John Smith &lt;john@company.com&gt;</div>
+                    <div class="body">Thanks Sarah. Let's make sure the CEO knows about the spend increase before the
+                        board meeting on Friday.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Summarize/Reply -->
+    <div id="modal" class="ai-exec-modal">
+        <div class="ai-exec-modal-header">
+            <span id="modalTitle">Analysis</span>
+            <span class="ai-exec-modal-close" id="modalClose">✕</span>
+        </div>
+        <div id="modalContent" class="ai-exec-modal-content">Processing...</div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8080';
+
+        // UI Helpers
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+
+        function showModal(title, content) {
+            modalTitle.innerText = title;
+            modalContent.innerHTML = content.replace(/\n/g, '<br>');
+            modal.classList.add('active');
+        }
+
+        document.getElementById('modalClose').onclick = () => modal.classList.remove('active');
+
+        // 1. Handle Improve
+        document.getElementById('improveBtn').onclick = async () => {
+            const btn = document.getElementById('improveBtn');
+            const box = document.getElementById('composeBox');
+            const text = box.value;
+            if (!text) return;
+
+            btn.classList.add('ai-exec-loading');
+            btn.innerText = "Processing...";
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/improve`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+                const data = await res.json();
+                box.value = data.improved_text;
+            } catch (e) {
+                alert("Backend not found. Make sure main.py is running!");
+            } finally {
+                btn.classList.remove('ai-exec-loading');
+                btn.innerText = "✨ Improve Draft";
+            }
+        };
+
+        // 2. Handle Summarize
+        document.getElementById('summarizeBtn').onclick = async () => {
+            const btn = document.getElementById('summarizeBtn');
+            const thread = document.getElementById('threadView').innerText;
+
+            showModal("Generating Summary...", "Please wait while the AI analyzes the thread...");
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/summarize`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: thread })
+                });
+                const data = await res.json();
+                showModal("Thread Summary", data.raw_summary);
+            } catch (e) {
+                showModal("Error", "Could not connect to backend.");
+            }
+        };
+
+        // 3. Handle Reply
+        document.getElementById('replyBtn').onclick = async () => {
+            const thread = document.getElementById('threadView').innerText;
+
+            showModal("Generating Reply...", "Drafting a professional response...");
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/reply`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: thread })
+                });
+                const data = await res.json();
+                showModal("Suggested Reply", data.reply_text + '<br><br><button onclick="navigator.clipboard.writeText(\'' + data.reply_text.replace(/\'/g, "\\'") + '\'); alert(\'Copied!\')" style="padding: 5px 10px; cursor: pointer;">Copy to Clipboard</button>');
+            } catch (e) {
+                showModal("Error", "Could not connect to backend.");
+            }
+        };
+    </script>
+</body>
+
+</html>
