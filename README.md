@@ -17,65 +17,46 @@ To set up the project on your local system, ensure you have the following instal
 *   Google Chrome (or a Chromium-based browser)
 *   Git
 
-## Local Setup Instructions
+## Setup Instructions
 
-### 1. Backend Configuration
+The backend API is already securely hosted on Google Cloud Run, which means you only need to install the frontend Chrome Extension to get started.
 
-The backend relies on the LiteLLM library to interface with language models (defaulting to Groq for speed and efficiency).
-
-1.  Navigate to the backend directory:
-    ```bash
-    cd backend
-    ```
-
-2.  Install the required Python dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3.  Configure your environment variables. Create a `.env` file in the `backend` directory and add your API keys:
-    ```env
-    GROQ_API_KEY=your_groq_api_key_here
-    LLM_MODEL=groq/llama-3.1-8b-instant
-    ```
-
-4.  Start the FastAPI server:
-    ```bash
-    python main.py
-    ```
-    The backend will start running locally at `http://localhost:8080`.
-
-### 2. Frontend Configuration (Chrome Extension)
+### Setting up the Chrome Extension
 
 The Chrome extension needs to be loaded into your browser in Developer Mode.
 
-1.  Open Google Chrome and navigate to the Extensions page:
+1.  Clone or download this repository to your local machine:
+    ```bash
+    git clone https://github.com/manavidubey/email_helper_extension.git
+    ```
+
+2.  Open Google Chrome and navigate to the Extensions page:
     ```text
     chrome://extensions/
     ```
 
-2.  Enable **Developer mode** by toggling the switch in the top right corner of the page.
+3.  Enable **Developer mode** by toggling the switch in the top right corner of the page.
 
-3.  Click the **Load unpacked** button.
+4.  Click the **Load unpacked** button.
 
-4.  Select the `extension` directory located within this project's root folder.
+5.  Select the `extension` folder located within this downloaded repository.
 
-### 3. Usage
+### Usage
 
 1.  Navigate to Gmail in your Chrome browser.
-2.  Open any email thread. You will see a "Email Helper" button injected into the bottom right corner of the page.
+2.  Open any email thread. You will see an "Email Helper" button injected into the bottom right corner of the page.
 3.  Click the button to access the dashboard.
-4.  Use the **Summarize Thread** feature to extract key decisions and action items, or use the **Smart Reply** feature with a specified intent to automatically draft a contextual response.
-5.  Click the Settings (gear) icon in the dashboard header to customize the system prompts that guide the AI agents.
+4.  Use the **Summarize Thread** feature to extract key priorities and action items, or use the **Smart Reply** feature with a specified intent to automatically draft a contextual response.
+5.  Click the **Settings (gear) icon** in the dashboard header to customize the system prompts that guide the AI agents. You can add specific instructions like "use no subject line" or "always use a highly formal tone."
 
-## Deployment
+## Backend Details (For Developers)
 
-The backend is containerized and can be deployed to cloud platforms such as Google Cloud Run. A `deploy.sh` script is included in the root directory as an example of deploying the service via Google Cloud Build to Artifact Registry and Cloud Run.
+The backend is a FastAPI application that utilizes LiteLLM to interface with language models (defaulting to Groq for speed and efficiency) and CrewAI to orchestrate the "Email Analyst" and "Communications Executive" multi-agent workflows.
 
-To deploy to Google Cloud Run, ensure the Google Cloud CLI is authenticated and configured, then execute:
+If you wish to run your own instance of the backend:
 
-```bash
-bash deploy.sh
-```
-
-Remember to update the `API_BASE_URL` in `extension/content.js` to point to your new live cloud endpoint after a successful deployment.
+1.  Navigate to the `backend` directory.
+2.  Install dependencies: `pip install -r requirements.txt`.
+3.  Set your environment variables in a `.env` file (e.g., `GROQ_API_KEY`, `OPENROUTER_API_KEY`).
+4.  Run the server: `python main.py`.
+5.  Update the `API_BASE_URL` in `extension/content.js` to point to your new local or cloud URL.
